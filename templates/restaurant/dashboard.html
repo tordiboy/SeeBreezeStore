@@ -1,0 +1,17 @@
+from django.db.models import Sum, Count
+
+def dashboard_view(request):
+    orders = Order.objects.all()
+
+    total_orders = orders.count()
+    total_revenue = orders.aggregate(Sum('total_price'))['total_price__sum'] or 0
+
+    pending = orders.filter(status='pending').count()
+    delivered = orders.filter(status='delivered').count()
+
+    return render(request, 'restaurant/dashboard.html', {
+        'total_orders': total_orders,
+        'total_revenue': total_revenue,
+        'pending': pending,
+        'delivered': delivered
+    })

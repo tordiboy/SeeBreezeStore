@@ -1,0 +1,58 @@
+{% extends 'restaurant/base.html' %}
+
+{% block content %}
+
+<h2 class="fw-bold mb-4">💳 Checkout</h2>
+
+<div class="row">
+
+    <div class="col-md-6">
+
+        <div class="card p-4 shadow-sm">
+
+            <form method="post">
+                {% csrf_token %}
+
+                <input type="text" name="full_name"
+                       class="form-control mb-3"
+                       placeholder="Full Name" required>
+
+                <input type="text" name="phone"
+                       class="form-control mb-3"
+                       placeholder="Phone Number" required>
+
+                <textarea name="address"
+                          class="form-control mb-3"
+                          placeholder="Delivery Address"
+                          required></textarea>
+
+                <button class="btn btn-success w-100">
+                    Place Order
+                </button>
+
+            </form>
+
+        </div>
+
+    </div>
+
+    <div class="col-md-6">
+
+        <div class="card p-4 shadow-sm">
+
+            <h5>Your Order</h5>
+
+            {% for item in cart.items.all %}
+                <div class="d-flex justify-content-between">
+                    <span>{{ item.meal.name }} x {{ item.quantity }}</span>
+                    <span>${{ item.get_total_price }}</span>
+                </div>
+            {% endfor %}
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

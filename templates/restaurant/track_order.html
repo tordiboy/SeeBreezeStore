@@ -1,0 +1,55 @@
+{% extends 'restaurant/base.html' %}
+
+{% block content %}
+
+<h2>📦 Track Your Order</h2>
+
+<div class="card p-4 shadow-sm">
+
+    <h4>Order #{{ order.id }}</h4>
+
+    <p><strong>Status:</strong>
+        <span class="badge bg-info">
+            {{ order.status }}
+        </span>
+    </p>
+
+    <p><strong>Total:</strong> ${{ order.total_price }}</p>
+
+    <hr>
+
+    <div class="progress">
+        {% if order.status == "pending" %}
+            <div class="progress-bar bg-warning" style="width: 30%"></div>
+        {% elif order.status == "processing" %}
+            <div class="progress-bar bg-primary" style="width: 60%"></div>
+        {% else %}
+            <div class="progress-bar bg-success" style="width: 100%"></div>
+        {% endif %}
+    </div>
+
+    {% if order.status == "delivered" %}
+        <a href="{% url 'user_orders' %}" class="btn btn-success mt-3">
+            View All Delivered Orders
+        </a>
+    {% endif %}
+
+</div>
+
+<script>
+setTimeout(function(){
+    location.reload();
+}, 5000);
+</script>
+
+<script>
+const socket = new WebSocket(
+    'ws://' + window.location.host + '/ws/order/{{ order.id }}/'
+);
+
+socket.onmessage = function(e) {
+    const data = JSON.parse(e.data);
+    location.reload(); // or update DOM instead
+};
+</script>
+{% endblock %}

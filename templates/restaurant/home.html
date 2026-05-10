@@ -1,0 +1,203 @@
+{% extends 'restaurant/base.html' %}
+
+{% load static %}
+
+{% block hero %}
+<div class="hero-section">
+    <div class="hero-overlay">
+        <h1>Delicious Meals Delivered To You 🍔</h1>
+        <p>Fresh meals fast at your doorstep</p>
+    </div>
+</div>
+{% endblock %}
+
+{% block content %}
+
+<div class="container py-4">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h3 class="fw-bold">Popular Meals</h3>
+    </div>
+
+    <div class="row g-3">
+
+        {% for meal in meals %}
+
+        <!-- 2 PER ROW ON MOBILE -->
+        <div class="col-6 col-md-4 col-lg-3">
+
+            <div class="card meal-card h-100 border-0 shadow-sm">
+
+                <div class="meal-img-wrapper">
+                    <img src="{{ meal.image.url }}" class="meal-img">
+                </div>
+
+                <div class="card-body d-flex flex-column">
+
+                    <h6 class="meal-title">
+                        {{ meal.name }}
+                    </h6>
+
+                    <p class="meal-desc text-muted">
+                        {{ meal.description|truncatewords:10 }}
+                    </p>
+
+                    <div class="mt-auto d-flex justify-content-between align-items-center">
+
+                        <span class="meal-price">
+                            ₦{{ meal.price }}
+                        </span>
+
+                        <form action="{% url 'add_to_cart' meal.id %}" method="post">
+                            {% csrf_token %}
+
+                            <button class="btn btn-warning btn-sm add-btn">
+                                Add
+                            </button>
+                        </form>
+
+                    </div>
+
+                </div>
+
+                <a href="{% url 'meal_detail' meal.slug %}" class="stretched-link"></a>
+
+            </div>
+
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+</div>
+
+<style>
+
+    body{
+        background: #f8f9fa;
+    }
+
+    /* HERO SECTION */
+    .hero-section{
+        background: linear-gradient(rgba(0,0,0,0.5),
+        rgba(0,0,0,0.5)),
+        url("{% static 'img/12.jpg' %}");
+
+        background-size: cover;
+        background-position: center;
+        height: 320px;
+
+        border-radius: 0 0 30px 30px;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        text-align: center;
+        color: white;
+        margin-bottom: 30px;
+    }
+
+    .hero-overlay h1{
+        font-weight: 800;
+        font-size: 2.5rem;
+    }
+
+    .hero-overlay p{
+        font-size: 1rem;
+        opacity: 0.9;
+    }
+
+    /* PRODUCT CARD */
+    .meal-card{
+        border-radius: 18px;
+        overflow: hidden;
+        transition: all 0.3s ease;
+        background: white;
+    }
+
+    .meal-card:hover{
+        transform: translateY(-5px);
+        box-shadow: 0 12px 25px rgba(0,0,0,0.08);
+    }
+
+    .meal-img-wrapper{
+        width: 100%;
+        height: 180px;
+        overflow: hidden;
+    }
+
+    .meal-img{
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: 0.3s ease;
+    }
+
+    .meal-card:hover .meal-img{
+        transform: scale(1.05);
+    }
+
+    .meal-title{
+        font-weight: 700;
+        font-size: 15px;
+        color: #212529;
+    }
+
+    .meal-desc{
+        font-size: 13px;
+        line-height: 1.4;
+    }
+
+    .meal-price{
+        font-weight: 700;
+        color: #ff9800;
+        font-size: 16px;
+    }
+
+    .add-btn{
+        border-radius: 10px;
+        padding: 5px 12px;
+        font-size: 12px;
+        font-weight: 600;
+    }
+
+    /* MOBILE RESPONSIVE */
+    @media (max-width: 576px){
+
+        .hero-section{
+            height: 220px;
+            border-radius: 0 0 20px 20px;
+        }
+
+        .hero-overlay h1{
+            font-size: 1.7rem;
+        }
+
+        .meal-img-wrapper{
+            height: 130px;
+        }
+
+        .meal-title{
+            font-size: 14px;
+        }
+
+        .meal-desc{
+            font-size: 12px;
+        }
+
+        .meal-price{
+            font-size: 14px;
+        }
+
+        .add-btn{
+            padding: 4px 10px;
+            font-size: 11px;
+        }
+
+    }
+
+</style>
+
+{% endblock %}

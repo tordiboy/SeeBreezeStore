@@ -1,0 +1,41 @@
+{% extends 'restaurant/base.html' %}
+
+{% block content %}
+
+<h2 class="mb-4">📦 My Delivered Orders</h2>
+
+{% if orders %} <div class="card p-3 shadow-sm">
+
+```
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Order ID</th>
+                <th>Total</th>
+                <th>Date</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            {% for order in orders %}
+            <tr>
+                <td>#{{ order.id }}</td>
+                <td>${{ order.total_price }}</td>
+                <td>{{ order.created }}</td>
+                <td>
+                    <span class="badge bg-success">Delivered</span>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+
+    </table>
+
+</div>
+```
+
+{% else %} <p>No delivered orders yet.</p>
+{% endif %}
+
+{% endblock %}

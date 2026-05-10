@@ -1,0 +1,98 @@
+{% extends 'restaurant/base.html' %}
+
+{% block content %}
+
+<style>
+    body{
+    background: linear-gradient(to right, #fff8e1, #ffffff);
+    min-height: 100vh;
+}
+
+.login-card{
+    border: none;
+    border-radius: 20px;
+    background: #fff;
+}
+
+.form-control{
+    border-radius: 12px;
+    padding: 12px;
+    border: 1px solid #ddd;
+    transition: all 0.3s ease;
+}
+
+.form-control:focus{
+    border-color: #212529;
+    box-shadow: 0 0 10px rgba(0,0,0,0.15);
+}
+
+.login-btn{
+    padding: 12px;
+    border-radius: 12px;
+    font-weight: 600;
+    transition: 0.3s ease;
+}
+
+.login-btn:hover{
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(0,0,0,0.2);
+}
+
+.signup-link{
+    color: #ff9800;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.signup-link:hover{
+    text-decoration: underline;
+}
+</style>
+
+<div class="container py-5">
+    <div class="row justify-content-center align-items-center">
+
+        <div class="col-md-4">
+
+            <div class="card login-card shadow-lg p-4">
+
+                <div class="text-center mb-4">
+                    <h2 class="fw-bold">Welcome Back</h2>
+                    <p class="text-muted">
+                        Login to continue your food journey
+                    </p>
+                </div>
+
+                <form method="post">
+                    {% csrf_token %}
+
+                    <div class="mb-3">
+                        {{ form.username }}
+                    </div>
+
+                    <div class="mb-3">
+                        {{ form.password }}
+                    </div>
+
+                    <button class="btn btn-dark w-100 login-btn">
+                        Login
+                    </button>
+                </form>
+
+                <div class="text-center mt-4">
+                    <small>
+                        No account?
+                        <a href="{% url 'signup' %}" class="signup-link">
+                            Sign up
+                        </a>
+                    </small>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+{% endblock %}

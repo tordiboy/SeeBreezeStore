@@ -1,0 +1,34 @@
+{% extends 'restaurant/base.html' %}
+
+{% block content %}
+
+<h2 class="fw-bold mb-4">Your Cart 🛒</h2>
+
+{% if cart.items.all %} <div class="card shadow-sm p-3"> <table class="table align-middle"> <thead> <tr> <th>Meal</th> <th>Qty</th> <th>Price</th> <th>Total</th> </tr> </thead>
+
+```
+        <tbody>
+            {% for item in cart.items.all %}
+                <tr>
+                    <td>{{ item.meal.name }}</td>
+                    <td>{{ item.quantity }}</td>
+                    <td>${{ item.meal.price }}</td>
+                    <td class="fw-bold">${{ item.get_total_price }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="d-flex justify-content-between align-items-center mt-3">
+        <h4>Total: <span class="text-success">${{ total }}</span></h4>
+        <a href="{% url 'checkout' %}" class="btn btn-success btn-lg">
+            Checkout
+        </a>
+    </div>
+</div>
+```
+
+{% else %} <p class="text-muted">Your cart is empty.</p>
+{% endif %}
+
+{% endblock %}

@@ -1,0 +1,196 @@
+{% extends 'restaurant/base.html' %}
+
+{% block content %}
+
+<div class="container py-4">
+
+    <!-- HEADER -->
+    <div class="mb-4 text-center text-md-start">
+        <h2 class="fw-bold">📦 Orders Dashboard</h2>
+        <p class="text-muted">Manage and track all customer orders</p>
+    </div>
+
+    <!-- ========================= -->
+    <!-- 💻 DESKTOP TABLE VIEW -->
+    <!-- ========================= -->
+    <div class="d-none d-md-block">
+
+        <div class="table-responsive shadow-sm rounded">
+
+            <table class="table table-hover align-middle mb-0">
+
+                <thead class="table-dark">
+                    <tr>
+                        <th>ID</th>
+                        <th>User</th>
+                        <th>Total</th>
+                        <th>Status</th>
+                        <th>Date</th>
+                        <th>Update</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for order in orders %}
+                    <tr>
+
+                        <td class="fw-bold">#{{ order.id }}</td>
+
+                        <td>{{ order.user.username }}</td>
+
+                        <td class="fw-bold text-success">
+                            ${{ order.total_price }}
+                        </td>
+
+                        <td>
+                            {% if order.status == "pending" %}
+                                <span class="badge bg-warning text-dark">Pending</span>
+                            {% elif order.status == "processing" %}
+                                <span class="badge bg-primary">Processing</span>
+                            {% else %}
+                                <span class="badge bg-success">Delivered</span>
+                            {% endif %}
+                        </td>
+
+                        <td>
+                            <small class="text-muted">{{ order.created }}</small>
+                        </td>
+
+                        <td>
+                            <select onchange="location = this.value;"
+                                    class="form-select form-select-sm">
+
+                                <option disabled selected>Change</option>
+
+                                <option value="{% url 'update_order_status' order.id 'pending' %}">
+                                    Pending
+                                </option>
+
+                                <option value="{% url 'update_order_status' order.id 'processing' %}">
+                                    Processing
+                                </option>
+
+                                <option value="{% url 'update_order_status' order.id 'delivered' %}">
+                                    Delivered
+                                </option>
+
+                            </select>
+                        </td>
+
+                        <td class="d-flex gap-2">
+
+                            <a href="{% url 'admin_order_detail' order.id %}"
+                               class="btn btn-sm btn-dark">
+                                View
+                            </a>
+
+                            <form action="{% url 'delete_order' order.id %}"
+                                  method="post"
+                                  class="d-inline">
+                                {% csrf_token %}
+                                <button class="btn btn-sm btn-danger"
+                                        onclick="return confirm('Delete this order?')">
+                                    Delete
+                                </button>
+                            </form>
+
+                        </td>
+
+                    </tr>
+                    {% endfor %}
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+    <!-- ========================= -->
+    <!-- 📱 MOBILE CARD VIEW -->
+    <!-- ========================= -->
+    <div class="d-md-none">
+
+        {% for order in orders %}
+        <div class="order-card shadow-sm mb-3 p-3 rounded">
+
+            <div class="d-flex justify-content-between mb-2">
+                <strong>#{{ order.id }}</strong>
+
+                {% if order.status == "pending" %}
+                    <span class="badge bg-warning text-dark">Pending</span>
+                {% elif order.status == "processing" %}
+                    <span class="badge bg-primary">Processing</span>
+                {% else %}
+                    <span class="badge bg-success">Delivered</span>
+                {% endif %}
+            </div>
+
+            <p class="mb-1"><strong>User:</strong> {{ order.user.username }}</p>
+            <p class="mb-1"><strong>Total:</strong> <span class="text-success">${{ order.total_price }}</span></p>
+            <p class="mb-2 text-muted"><small>{{ order.created }}</small></p>
+
+            <div class="d-flex gap-2 flex-wrap">
+
+                <select onchange="location = this.value;"
+                        class="form-select form-select-sm w-100">
+
+                    <option disabled selected>Change status</option>
+
+                    <option value="{% url 'update_order_status' order.id 'pending' %}">
+                        Pending
+                    </option>
+
+                    <option value="{% url 'update_order_status' order.id 'processing' %}">
+                        Processing
+                    </option>
+
+                    <option value="{% url 'update_order_status' order.id 'delivered' %}">
+                        Delivered
+                    </option>
+
+                </select>
+
+                <a href="{% url 'admin_order_detail' order.id %}"
+                   class="btn btn-dark btn-sm w-100">
+                    View
+                </a>
+
+                <form action="{% url 'delete_order' order.id %}"
+                      method="post"
+                      class="w-100">
+                    {% csrf_token %}
+                    <button class="btn btn-danger btn-sm w-100"
+                            onclick="return confirm('Delete this order?')">
+                        Delete
+                    </button>
+                </form>
+
+            </div>
+
+        </div>
+        {% endfor %}
+
+    </div>
+
+</div>
+
+<!-- ========================= -->
+<!-- 🎨 STYLES -->
+<!-- ========================= -->
+<style>
+
+    .order-card {
+        background: #fff;
+        border-radius: 12px;
+    }
+
+    .order-card:hover {
+        transform: translateY(-2px);
+        transition: 0.2s ease;
+    }
+
+</style>
+
+{% endblock %}
