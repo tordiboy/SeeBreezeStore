@@ -236,3 +236,20 @@ def dashboard_view(request):
         'delivered': delivered
     })
 
+
+
+from django.shortcuts import get_object_or_404
+from django.contrib.auth.decorators import login_required
+
+@login_required
+def remove_from_cart(request, item_id):
+    item = get_object_or_404(CartItem, id=item_id, cart__user=request.user)
+    item.delete()
+    return redirect('cart')
+
+
+@login_required
+def clear_cart(request):
+    cart, created = Cart.objects.get_or_create(user=request.user)
+    cart.items.all().delete()
+    return redirect('cart')
