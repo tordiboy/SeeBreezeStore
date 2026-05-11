@@ -140,9 +140,13 @@ def success_view(request):
 # This part for admin login only
 @staff_member_required
 def admin_orders_view(request):
+    query = request.GET.get('q')
     orders = Order.objects.all().order_by('-created')
-    return render(request, 'restaurant/admin_orders.html', {'orders': orders})
-
+    if query:
+        orders = orders.filter(order_code__icontains=query)
+    return render(request, 'restaurant/admin_orders.html', {
+        'orders': orders
+    })
 
 
 @staff_member_required
