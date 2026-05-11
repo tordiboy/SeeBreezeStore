@@ -2,61 +2,73 @@
 
 {% block content %}
 
-<h2 class="fw-bold mb-4">Your Cart 🛒</h2>
+<h2 class="fw-bold mb-4 text-center text-md-start">Your Cart 🛒</h2>
 
 {% if cart.items.all %}
 
 <div class="card shadow-sm p-3">
 
 ```
-<table class="table align-middle">
+<!-- ✅ RESPONSIVE TABLE WRAPPER -->
+<div class="table-responsive">
 
-    <thead>
-        <tr>
-            <th>Meal</th>
-            <th>Qty</th>
-            <th>Price</th>
-            <th>Total</th>
-            <th>Remove</th> <!-- ✅ NEW COLUMN -->
-        </tr>
-    </thead>
+    <table class="table align-middle">
 
-    <tbody>
-        {% for item in cart.items.all %}
+        <thead class="table-dark">
             <tr>
-                <td>{{ item.meal.name }}</td>
-                <td>{{ item.quantity }}</td>
-                <td>${{ item.meal.price }}</td>
-                <td class="fw-bold">${{ item.get_total_price }}</td>
-
-                <!-- ✅ FIX: button INSIDE loop -->
-                <td>
-                    <a href="{% url 'remove_from_cart' item.id %}"
-                       class="btn btn-sm btn-danger"
-                       onclick="return confirm('Remove this item?')">
-                        Remove
-                    </a>
-                </td>
+                <th>Meal</th>
+                <th>Qty</th>
+                <th>Price</th>
+                <th>Total</th>
+                <th>Remove</th>
             </tr>
-        {% endfor %}
-    </tbody>
+        </thead>
 
-</table>
+        <tbody>
+            {% for item in cart.items.all %}
+                <tr>
+                    <td>
+                        <strong>{{ item.meal.name }}</strong>
+                    </td>
+
+                    <td>{{ item.quantity }}</td>
+
+                    <td>${{ item.meal.price }}</td>
+
+                    <td class="fw-bold text-success">
+                        ${{ item.get_total_price }}
+                    </td>
+
+                    <td>
+                        <a href="{% url 'remove_from_cart' item.id %}"
+                           class="btn btn-sm btn-danger">
+                            Remove
+                        </a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+
+    </table>
+
+</div>
 
 <!-- TOTAL + ACTIONS -->
-<div class="d-flex justify-content-between align-items-center mt-3 flex-wrap gap-2">
+<div class="d-flex justify-content-between align-items-center mt-3 flex-wrap gap-3">
 
-    <h4>Total: <span class="text-success">${{ total }}</span></h4>
+    <h4 class="m-0">
+        Total: <span class="text-success">${{ total }}</span>
+    </h4>
 
-    <div class="d-flex gap-2">
+    <div class="d-flex flex-wrap gap-2">
 
         <a href="{% url 'clear_cart' %}"
-           class="btn btn-outline-danger"
-           onclick="return confirm('Clear entire cart?')">
+           class="btn btn-outline-danger">
             Clear Cart
         </a>
 
-        <a href="{% url 'checkout' %}" class="btn btn-success btn-lg">
+        <a href="{% url 'checkout' %}"
+           class="btn btn-success">
             Checkout
         </a>
 
@@ -67,7 +79,47 @@
 
 </div>
 
-{% else %} <p class="text-muted">Your cart is empty.</p>
+{% else %} <p class="text-muted text-center">Your cart is empty.</p>
 {% endif %}
+
+<!-- ✅ MOBILE OPTIMIZATION -->
+
+<style>
+
+    .table-responsive {
+        border-radius: 10px;
+        overflow-x: auto;
+    }
+
+    /* Smaller text + better spacing on mobile */
+    @media (max-width: 768px) {
+
+        h2 {
+            font-size: 1.4rem;
+            text-align: center;
+        }
+
+        table {
+            font-size: 0.85rem;
+        }
+
+        .btn {
+            padding: 5px 10px;
+            font-size: 0.75rem;
+        }
+
+        h4 {
+            font-size: 1rem;
+            text-align: center;
+            width: 100%;
+        }
+
+        .d-flex.justify-content-between {
+            flex-direction: column;
+            align-items: center;
+        }
+    }
+
+</style>
 
 {% endblock %}
