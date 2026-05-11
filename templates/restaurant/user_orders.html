@@ -2,40 +2,116 @@
 
 {% block content %}
 
-<h2 class="mb-4">📦 My Delivered Orders</h2>
+<div class="container py-4">
 
-{% if orders %} <div class="card p-3 shadow-sm">
+    <h2 class="fw-bold mb-4 text-center text-md-start">
+        📦 My Delivered Orders
+    </h2>
 
-```
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Order ID</th>
-                <th>Total</th>
-                <th>Date</th>
-                <th>Status</th>
-            </tr>
-        </thead>
+    {% if orders %}
 
-        <tbody>
-            {% for order in orders %}
-            <tr>
-                <td>#{{ order.id }}</td>
-                <td>${{ order.total_price }}</td>
-                <td>{{ order.created }}</td>
-                <td>
-                    <span class="badge bg-success">Delivered</span>
-                </td>
-            </tr>
-            {% endfor %}
-        </tbody>
+    <!-- DESKTOP TABLE -->
+    <div class="d-none d-md-block">
 
-    </table>
+        <div class="table-responsive shadow-sm rounded">
+
+            <table class="table table-hover align-middle">
+
+                <thead class="table-dark">
+                    <tr>
+                        <th>Order ID</th>
+                        <th>Total</th>
+                        <th>Status</th>
+                        <th>Date</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for order in orders %}
+                    <tr>
+
+                        <!-- ✅ ORDER CODE -->
+                        <td class="fw-bold text-primary">
+                            {{ order.order_code }}
+                        </td>
+
+                        <td class="text-success fw-bold">
+                            ${{ order.total_price }}
+                        </td>
+
+                        <td>
+                            <span class="badge bg-success">
+                                Delivered
+                            </span>
+                        </td>
+
+                        <td>
+                            <small class="text-muted">
+                                {{ order.created }}
+                            </small>
+                        </td>
+
+                        <td>
+                            <a href="{% url 'track_order' order.id %}"
+                               class="btn btn-sm btn-dark">
+                                View
+                            </a>
+                        </td>
+
+                    </tr>
+                    {% endfor %}
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+    <!-- MOBILE VIEW -->
+    <div class="d-md-none">
+
+        {% for order in orders %}
+        <div class="card shadow-sm mb-3 p-3 rounded">
+
+            <div class="d-flex justify-content-between mb-2">
+                <strong class="text-primary">
+                    {{ order.order_code }}
+                </strong>
+
+                <span class="badge bg-success">
+                    Delivered
+                </span>
+            </div>
+
+            <p class="mb-1">
+                <strong>Total:</strong>
+                <span class="text-success">${{ order.total_price }}</span>
+            </p>
+
+            <p class="mb-2 text-muted">
+                <small>{{ order.created }}</small>
+            </p>
+
+            <a href="{% url 'track_order' order.id %}"
+               class="btn btn-dark btn-sm w-100">
+                View Details
+            </a>
+
+        </div>
+        {% endfor %}
+
+    </div>
+
+    {% else %}
+
+        <p class="text-muted text-center">
+            You have no delivered orders yet.
+        </p>
+
+    {% endif %}
 
 </div>
-```
-
-{% else %} <p>No delivered orders yet.</p>
-{% endif %}
 
 {% endblock %}
