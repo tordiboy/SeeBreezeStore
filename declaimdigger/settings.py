@@ -15,7 +15,7 @@ SECRET_KEY = 'django-insecure-0@cx$m5hxsox$n@dladbend!!!!9i%n-y)zd0huj_e8omif)9z
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['https://seebreezestore.onrender.com']
 
 
 # Application definition
