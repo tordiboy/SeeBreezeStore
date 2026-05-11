@@ -4,29 +4,68 @@
 
 <h2 class="fw-bold mb-4">Your Cart 🛒</h2>
 
-{% if cart.items.all %} <div class="card shadow-sm p-3"> <table class="table align-middle"> <thead> <tr> <th>Meal</th> <th>Qty</th> <th>Price</th> <th>Total</th> </tr> </thead>
+{% if cart.items.all %}
+
+<div class="card shadow-sm p-3">
 
 ```
-        <tbody>
-            {% for item in cart.items.all %}
-                <tr>
-                    <td>{{ item.meal.name }}</td>
-                    <td>{{ item.quantity }}</td>
-                    <td>${{ item.meal.price }}</td>
-                    <td class="fw-bold">${{ item.get_total_price }}</td>
-                </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+<table class="table align-middle">
 
-    <div class="d-flex justify-content-between align-items-center mt-3">
-        <h4>Total: <span class="text-success">${{ total }}</span></h4>
+    <thead>
+        <tr>
+            <th>Meal</th>
+            <th>Qty</th>
+            <th>Price</th>
+            <th>Total</th>
+            <th>Remove</th> <!-- ✅ NEW COLUMN -->
+        </tr>
+    </thead>
+
+    <tbody>
+        {% for item in cart.items.all %}
+            <tr>
+                <td>{{ item.meal.name }}</td>
+                <td>{{ item.quantity }}</td>
+                <td>${{ item.meal.price }}</td>
+                <td class="fw-bold">${{ item.get_total_price }}</td>
+
+                <!-- ✅ FIX: button INSIDE loop -->
+                <td>
+                    <a href="{% url 'remove_from_cart' item.id %}"
+                       class="btn btn-sm btn-danger"
+                       onclick="return confirm('Remove this item?')">
+                        Remove
+                    </a>
+                </td>
+            </tr>
+        {% endfor %}
+    </tbody>
+
+</table>
+
+<!-- TOTAL + ACTIONS -->
+<div class="d-flex justify-content-between align-items-center mt-3 flex-wrap gap-2">
+
+    <h4>Total: <span class="text-success">${{ total }}</span></h4>
+
+    <div class="d-flex gap-2">
+
+        <a href="{% url 'clear_cart' %}"
+           class="btn btn-outline-danger"
+           onclick="return confirm('Clear entire cart?')">
+            Clear Cart
+        </a>
+
         <a href="{% url 'checkout' %}" class="btn btn-success btn-lg">
             Checkout
         </a>
+
     </div>
+
 </div>
 ```
+
+</div>
 
 {% else %} <p class="text-muted">Your cart is empty.</p>
 {% endif %}
